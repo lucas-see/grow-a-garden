@@ -1,0 +1,63 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #e6ffe6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.game-container {
+  text-align: center;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 600px;
+}
+
+button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #66bb6a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #57a05d;
+}
+
+.garden {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  min-height: 150px;
+}
+
+.plant {
+  font-size: 2.5rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.plant:hover {
+  transform: scale(1.2);
+}
+
+.plant.remove {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.instructions {
+  margin-top: 20px;
+  color: #555;
+  font-size: 0.9rem;
+}
