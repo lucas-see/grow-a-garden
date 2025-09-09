@@ -1,3 +1,4 @@
+
 const garden = document.getElementById('garden');
 const clearBtn = document.getElementById('clearBtn');
 const plantModeBtn = document.getElementById('plantModeBtn');
