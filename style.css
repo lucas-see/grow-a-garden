@@ -26,25 +26,36 @@ button {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  margin-bottom: 20px;
 }
 
 button:hover {
   background-color: #57a05d;
 }
 
+#clearBtn {
+  background-color: #ef5350;
+}
+
+#clearBtn:hover {
+  background-color: #d32f2f;
+}
+
 .garden {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-  min-height: 150px;
+  position: relative;
+  background-color: #ccffcc;
+  border: 2px dashed #a5d6a7;
+  height: 300px;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .plant {
-  font-size: 2.5rem;
+  position: absolute;
+  font-size: 2rem;
   transition: transform 0.3s ease, opacity 0.3s ease;
   cursor: pointer;
+  user-select: none;
 }
 
 .plant:hover {
@@ -60,4 +71,11 @@ button:hover {
   margin-top: 20px;
   color: #555;
   font-size: 0.9rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
