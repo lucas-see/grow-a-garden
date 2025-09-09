@@ -1,13 +1,38 @@
-const plantBtn = document.getElementById('plantBtn');
 const garden = document.getElementById('garden');
+const clearBtn = document.getElementById('clearBtn');
+const plantModeBtn = document.getElementById('plantModeBtn');
 
-// Plant growth stages
+// Growth stages of plant
 const growthStages = ['🌱', '🌿', '🌸', '🌼'];
 
-plantBtn.addEventListener('click', () => {
+let plantMode = false;
+
+// Toggle plant mode
+plantModeBtn.addEventListener('click', () => {
+  plantMode = !plantMode;
+  plantModeBtn.textContent = `Plant Mode: ${plantMode ? 'ON' : 'OFF'}`;
+  plantModeBtn.style.backgroundColor = plantMode ? '#388e3c' : '#66bb6a';
+});
+
+// Click on garden to plant seed
+garden.addEventListener('click', (e) => {
+  if (!plantMode) return;
+
+  // Calculate position relative to garden
+  const rect = garden.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  plantSeed(x, y);
+});
+
+// Plant seed at a given (x, y) position
+function plantSeed(x, y) {
   const plant = document.createElement('div');
   plant.classList.add('plant');
-  plant.textContent = growthStages[0]; // Start as seedling
+  plant.textContent = growthStages[0];
+  plant.style.left = `${x}px`;
+  plant.style.top = `${y}px`;
   garden.appendChild(plant);
 
   let stage = 0;
@@ -21,11 +46,23 @@ plantBtn.addEventListener('click', () => {
     }
   }, 1500);
 
-  // Click to remove the plant
-  plant.addEventListener('click', () => {
+  // Remove plant on click
+  plant.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent garden click
     plant.classList.add('remove');
     setTimeout(() => {
       plant.remove();
-    }, 300); // Match the CSS transition time
+    }, 300);
+  });
+}
+
+// Clear all plants
+clearBtn.addEventListener('click', () => {
+  const allPlants = document.querySelectorAll('.plant');
+  allPlants.forEach((plant) => {
+    plant.classList.add('remove');
+    setTimeout(() => {
+      plant.remove();
+    }, 300);
   });
 });
