@@ -1,69 +1,86 @@
 
-const garden = document.getElementById('garden');
-const clearBtn = document.getElementById('clearBtn');
-const plantModeBtn = document.getElementById('plantModeBtn');
 
-// Growth stages of plant
-const growthStages = ['🌱', '🌿', '🌸', '🌼'];
+body { 
+  font-family: 'Segoe UI', sans-serif; 
+  background-color: #e6ffe6; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh; 
+  margin: 0; 
+} 
 
-let plantMode = false;
+.game-container { 
+  text-align: center; 
+  background: #ffffff; 
+  padding: 30px; 
+  border-radius: 15px; 
+  box-shadow: 0 0 20px rgba(0,0,0,0.1); 
+  width: 95%; 
+  max-width: 900px; 
+} 
 
-// Toggle plant mode
-plantModeBtn.addEventListener('click', () => {
-  plantMode = !plantMode;
-  plantModeBtn.textContent = `Plant Mode: ${plantMode ? 'ON' : 'OFF'}`;
-  plantModeBtn.style.backgroundColor = plantMode ? '#388e3c' : '#66bb6a';
-});
+button { 
+  padding: 12px 25px; 
+  font-size: 1rem; 
+  background-color: #66bb6a; 
+  color: white; 
+  border: none; 
+  border-radius: 10px; 
+  cursor: pointer; 
+} 
 
-// Click on garden to plant seed
-garden.addEventListener('click', (e) => {
-  if (!plantMode) return;
+button:hover { 
+  background-color: #57a05d; 
+} 
 
-  // Calculate position relative to garden
-  const rect = garden.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-
-  plantSeed(x, y);
-});
-
-// Plant seed at a given (x, y) position
-function plantSeed(x, y) {
-  const plant = document.createElement('div');
-  plant.classList.add('plant');
-  plant.textContent = growthStages[0];
-  plant.style.left = `${x}px`;
-  plant.style.top = `${y}px`;
-  garden.appendChild(plant);
-
-  let stage = 0;
-
-  const growInterval = setInterval(() => {
-    stage++;
-    if (stage < growthStages.length) {
-      plant.textContent = growthStages[stage];
-    } else {
-      clearInterval(growInterval);
-    }
-  }, 1500);
-
-  // Remove plant on click
-  plant.addEventListener('click', (e) => {
-    e.stopPropagation(); // prevent garden click
-    plant.classList.add('remove');
-    setTimeout(() => {
-      plant.remove();
-    }, 300);
-  });
+#clearBtn { 
+  background-color: #ef5350; 
 }
 
-// Clear all plants
-clearBtn.addEventListener('click', () => {
-  const allPlants = document.querySelectorAll('.plant');
-  allPlants.forEach((plant) => {
-    plant.classList.add('remove');
-    setTimeout(() => {
-      plant.remove();
-    }, 300);
-  });
-});
+#clearBtn:hover {
+  background-color: #d32f2f;
+}
+
+.garden { 
+  position: relative; 
+  background-color: #ccffcc;
+  border: 2px dashed #a5d6a7; 
+  height: 500px; 
+  width: 100%;
+  max-width: 100%; 
+  margin-top: 20px; 
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.plant {
+  position: absolute;
+  font-size: 2rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  cursor: pointer; 
+  user-select: none; 
+}
+
+.plant:hover {
+  transform: scale(1.2);
+}
+
+.plant.remove {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.instructions { 
+  margin-top: 20px; 
+  color: #555; 
+  font-size: 0.9rem;
+}
+
+.button-group { 
+  display: flex; 
+  justify-content: center; 
+  flex-wrap: wrap;
+  gap: 10px; 
+  margin-bottom: 20px; 
+}
