@@ -5,6 +5,9 @@ const plantModeBtn = document.getElementById('plantModeBtn');
 // Growth stages of plant
 const growthStages = ['plant vsZombie ', '🌿🧟‍♀️', 'kiss👦🧌 ', '❤️‍🥕👩‍👦🧌❤️‍💋‍👨'];
 
+// Points you get for each stage when deleting
+const stagePoints = [5, 10, 15, 20];
+
 let plantMode = false;
 
 // 💰 Points system
@@ -73,16 +76,29 @@ function plantSeed(x, y) {
     }
   }, 1500);
 
-  // 🌱 Click on individual plant to delete and gain 20 points
+  // Store the stage index on the plant element
+  plant.dataset.stage = stage;
+
+  const stageUpdater = setInterval(() => {
+    if (stage < growthStages.length) {
+      plant.dataset.stage = stage;
+    } else {
+      clearInterval(stageUpdater);
+    }
+  }, 1500);
+
+  // 🌱 Click on individual plant to delete and gain points based on stage
   plant.addEventListener('click', (e) => {
     e.stopPropagation();
     plant.classList.add('remove');
+
     setTimeout(() => {
+      const currentStage = parseInt(plant.dataset.stage || '0');
+      const earnedPoints = stagePoints[Math.min(currentStage, stagePoints.length - 1)];
+      points += earnedPoints;
+      updatePointsDisplay();
       plant.remove();
     }, 300);
-
-    points += 20; // ✅ Add points back for individual delete
-    updatePointsDisplay();
   });
 }
 
