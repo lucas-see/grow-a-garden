@@ -159,3 +159,31 @@ cheatInput.addEventListener('keydown', (e) => {
     cheatInput.style.display = 'none';
   }
 });
+// 🪣 Collect All Plants and gain points
+const collectBtn = document.getElementById('collectBtn');
+
+collectBtn.addEventListener('click', () => {
+  const allPlants = document.querySelectorAll('.plant');
+  let totalCollected = 0;
+
+  allPlants.forEach((plant) => {
+    const currentStage = parseInt(plant.dataset.stage || '0');
+    const earned = stagePoints[Math.min(currentStage, stagePoints.length - 1)];
+    totalCollected += earned;
+
+    plant.classList.add('remove');
+    setTimeout(() => {
+      plant.remove();
+      updatePointsDisplay();
+    }, 300);
+  });
+
+  if (allPlants.length > 0) {
+    points += totalCollected;
+    updatePointsDisplay();
+    alert(`🪴 Collected ${allPlants.length} plants and earned ${totalCollected} points!`);
+  } else {
+    alert('🌾 There are no plants to collect.');
+  }
+});
+
