@@ -4,8 +4,6 @@ const plantModeBtn = document.getElementById('plantModeBtn');
 
 // Growth stages of plant
 const growthStages = ['plant vsZombie ', '🌿🧟‍♀️', 'kiss👦🧌 ', '❤️‍🥕👩‍👦🧌❤️‍💋‍👨'];
-
-// Points you get for each stage when deleting
 const stagePoints = [5, 10, 15, 20];
 
 let plantMode = false;
@@ -51,7 +49,7 @@ garden.addEventListener('click', (e) => {
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  points -= 10; // 🔻 Deduct points to plant
+  points -= 10;
   updatePointsDisplay();
 
   plantSeed(x, y);
@@ -76,7 +74,7 @@ function plantSeed(x, y) {
     }
   }, 1500);
 
-  // Store the stage index on the plant element
+  // Keep updating the stage
   plant.dataset.stage = stage;
 
   const stageUpdater = setInterval(() => {
@@ -87,7 +85,7 @@ function plantSeed(x, y) {
     }
   }, 1500);
 
-  // 🌱 Click on individual plant to delete and gain points based on stage
+  // Delete plant on click and gain points based on stage
   plant.addEventListener('click', (e) => {
     e.stopPropagation();
     plant.classList.add('remove');
@@ -102,7 +100,7 @@ function plantSeed(x, y) {
   });
 }
 
-// 🧹 Clear all plants (NO points awarded)
+// Clear all plants (NO points awarded)
 clearBtn.addEventListener('click', () => {
   const allPlants = document.querySelectorAll('.plant');
   allPlants.forEach((plant) => {
@@ -111,13 +109,17 @@ clearBtn.addEventListener('click', () => {
       plant.remove();
     }, 300);
   });
-// 🕹️ Cheat code: Type "iddqd" to get 1 million points
+
+  updatePointsDisplay(); // No points added
+});
+
+
+// 🕹️ Keyboard cheat code: "iddqd" → 1M points
 let cheatBuffer = '';
 
 document.addEventListener('keydown', (e) => {
   cheatBuffer += e.key.toLowerCase();
 
-  // Keep only the last 10 characters
   if (cheatBuffer.length > 10) {
     cheatBuffer = cheatBuffer.slice(-10);
   }
@@ -126,13 +128,14 @@ document.addEventListener('keydown', (e) => {
     points = 1000000;
     updatePointsDisplay();
     alert('Cheat activated! 💰 You now have 1,000,000 points.');
-    cheatBuffer = ''; // reset after cheat
+    cheatBuffer = '';
   }
 });
-  const cheatBtn = document.getElementById('cheatBtn');
+
+// 🖱️ Cheat button + input box logic
+const cheatBtn = document.getElementById('cheatBtn');
 const cheatInput = document.getElementById('cheatInput');
 
-// Toggle cheat input visibility
 cheatBtn.addEventListener('click', () => {
   cheatInput.style.display = cheatInput.style.display === 'none' ? 'inline-block' : 'none';
   if (cheatInput.style.display !== 'none') {
@@ -140,7 +143,6 @@ cheatBtn.addEventListener('click', () => {
   }
 });
 
-// Handle cheat input
 cheatInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     const code = cheatInput.value.trim().toLowerCase();
@@ -156,9 +158,4 @@ cheatInput.addEventListener('keydown', (e) => {
     cheatInput.value = '';
     cheatInput.style.display = 'none';
   }
-});
-
-
-  // ⚠️ No points added on bulk clear
-  updatePointsDisplay();
 });
