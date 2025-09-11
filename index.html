@@ -1,65 +1,27 @@
-const garden = document.getElementById('garden');
-const clearBtn = document.getElementById('clearBtn');
-const plantModeBtn = document.getElementById('plantModeBtn');
+<!DOCTYPE html>
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+  <title>Grow a Garden</title> 
+  <link rel="stylesheet" href="style.css" /> 
+</head> 
+<body> 
+  <div class="game-container">
+    <h1>🌼 Grow a Garden 🌼</h1>
 
-// Growth stages of plant
-const growthStages = ['🌱', '🌿', '🌸', '🌼'];
+    <div class="button-group">
+      <button id="plantModeBtn">Plant Mode: OFF</button>
+      <button id="clearBtn">Clear All</button> 
+    </div> 
 
-let plantMode = false;
+    <div class="garden" id="garden"></div>
 
-// Toggle plant mode
-plantModeBtn.addEventListener('click', () => {
-  plantMode = !plantMode;
-  plantModeBtn.textContent = `Plant Mode: ${plantMode ? 'ON' : 'OFF'}`;
-  plantModeBtn.style.backgroundColor = plantMode ? '#388e3c' : '#66bb6a';
-});
+    <p class="instructions"> 
+      Click "Plant Mode" to toggle planting. Then click anywhere in the garden to plant a seed. Click a flower to remove it. 
+    </p> 
+  </div> 
 
-// Click on garden to plant seed
-garden.addEventListener('click', (e) => {
-  if (!plantMode) return;
-
-  const rect = garden.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-
-  plantSeed(x, y);
-});
-
-function plantSeed(x, y) {
-  const plant = document.createElement('div');
-  plant.classList.add('plant');
-  plant.textContent = growthStages[0];
-  plant.style.left = `${x}px`;
-  plant.style.top = `${y}px`;
-  garden.appendChild(plant);
-
-  let stage = 0;
-
-  const growInterval = setInterval(() => {
-    stage++;
-    if (stage < growthStages.length) {
-      plant.textContent = growthStages[stage];
-    } else {
-      clearInterval(growInterval);
-    }
-  }, 1500);
-
-  plant.addEventListener('click', (e) => {
-    e.stopPropagation();
-    plant.classList.add('remove');
-    setTimeout(() => {
-      plant.remove();
-    }, 300);
-  });
-}
-
-// Clear all plants
-clearBtn.addEventListener('click', () => {
-  const allPlants = document.querySelectorAll('.plant');
-  allPlants.forEach((plant) => {
-    plant.classList.add('remove');
-    setTimeout(() => {
-      plant.remove();
-    }, 300);
-  });
-});
+  <script src="script.js"></script> 
+</body> 
+</html>
