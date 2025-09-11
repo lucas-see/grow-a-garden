@@ -1,36 +1,194 @@
 <!DOCTYPE html>
-<html lang="en"> 
-<head> 
-  <meta charset="UTF-8" /> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-  <title>Grow a Garden</title> 
-  <link rel="stylesheet" href="style.css" /> 
-</head> 
-<body> 
-  <div class="game-container">
-    <h1>🌼 Grow a Garden 🌼</h1>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grow a Garden Game</title>
+  <style>
+    #garden {
+      width: 100%;
+      height: 80vh;
+      background-color: #e0f7fa;
+      position: relative;
+      border: 2px dashed #81d4fa;
+    }
 
-    <div class="button-group">
-      <button id="plantModeBtn">Plant Mode: OFF</button>
-      <button id="clearBtn">Clear All</button> 
-    </div> 
+    .plant {
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      font-size: 24px;
+    }
 
-    <div class="garden" id="garden"></div>
+    .plant.remove {
+      transform: scale(0);
+      opacity: 0;
+    }
 
-    <p class="instructions"> 
-      Click "Plant Mode" to toggle planting. Then click anywhere in the garden to plant a seed. Click a flower to remove it. 
-    </p> 
-  </div> 
+    #controls {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="controls">
+    <button id="plantModeBtn">Plant Mode: OFF</button>
+    <button id="clearBtn">Clear All</button>
+  </div>
+
+  <div id="garden"></div>
+
   <!-- Cheat Code UI -->
-<div id="cheatContainer" style="position: fixed; bottom: 10px; right: 10px;">
-  <button id="cheatBtn">💻 Cheat</button>
-  <input
-    type="text"
-    id="cheatInput"
-    placeholder="Enter cheat code"
-    style="display: none; margin-left: 5px; padding: 5px; font-family: monospace;"
-  />
-</div>
-  <script src="script.js"></script> 
-</body> 
+  <div id="cheatContainer" style="position: fixed; bottom: 10px; right: 10px;">
+    <button id="cheatBtn">💻 Cheat</button>
+    <input
+      type="text"
+      id="cheatInput"
+      placeholder="Enter cheat code"
+      style="display: none; margin-left: 5px; padding: 5px; font-family: monospace;"
+    />
+  </div>
+
+  <script>
+    const garden = document.getElementById('garden');
+    const clearBtn = document.getElementById('clearBtn');
+    const plantModeBtn = document.getElementById('plantModeBtn');
+
+    const growthStages = ['🌱', '🌿', '🌳', '🌸'];
+    const stagePoints = [5, 10, 15, 20];
+
+    let plantMode = false;
+    let points = 20;
+    let growSpeed = 1500; // Can be changed by "fastgrow" cheat
+
+    const pointDisplay = document.createElement('div');
+    pointDisplay.id = 'pointDisplay';
+    pointDisplay.style.position = 'fixed';
+    pointDisplay.style.top = '10px';
+    pointDisplay.style.right = '10px';
+    pointDisplay.style.padding = '10px';
+    pointDisplay.style.backgroundColor = '#fff';
+    pointDisplay.style.border = '1px solid #ccc';
+    pointDisplay.style.borderRadius = '5px';
+    pointDisplay.style.fontSize = '16px';
+    pointDisplay.style.fontFamily = 'monospace';
+    document.body.appendChild(pointDisplay);
+
+    function updatePointsDisplay() {
+      pointDisplay.textContent = `Points: ${points}`;
+    }
+
+    updatePointsDisplay();
+
+    plantModeBtn.addEventListener('click', () => {
+      plantMode = !plantMode;
+      plantModeBtn.textContent = `Plant Mode: ${plantMode ? 'ON' : 'OFF'}`;
+      plantModeBtn.style.backgroundColor = plantMode ? '#388e3c' : '#66bb6a';
+    });
+
+    garden.addEventListener('click', (e) => {
+      if (!plantMode || points < 10) {
+        if (points < 10) alert('Not enough points to plant!');
+        return;
+      }
+
+      const rect = garden.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      points -= 10;
+      updatePointsDisplay();
+      plantSeed(x, y);
+    });
+
+    function plantSeed(x, y) {
+      const plant = document.createElement('div');
+      plant.classList.add('plant');
+      plant.textContent = growthStages[0];
+      plant.style.left = `${x}px`;
+      plant.style.top = `${y}px`;
+      garden.appendChild(plant);
+
+      let stage = 0;
+      plant.dataset.stage = stage;
+
+      const growInterval = setInterval(() => {
+        stage++;
+        if (stage < growthStages.length) {
+          plant.textContent = growthStages[stage];
+          plant.dataset.stage = stage;
+        } else {
+          clearInterval(growInterval);
+        }
+      }, growSpeed);
+
+      plant.addEventListener('click', (e) => {
+        e.stopPropagation();
+        plant.classList.add('remove');
+        setTimeout(() => {
+          const currentStage = parseInt(plant.dataset.stage || '0');
+          const earned = stagePoints[Math.min(currentStage, stagePoints.length - 1)];
+          points += earned;
+          updatePointsDisplay();
+          plant.remove();
+        }, 300);
+      });
+    }
+
+    clearBtn.addEventListener('click', () => {
+      const allPlants = document.querySelectorAll('.plant');
+      allPlants.forEach((plant) => {
+        plant.classList.add('remove');
+        setTimeout(() => plant.remove(), 300);
+      });
+      updatePointsDisplay();
+    });
+
+    // Cheat button/input logic
+    const cheatBtn = document.getElementById('cheatBtn');
+    const cheatInput = document.getElementById('cheatInput');
+
+    cheatBtn.addEventListener('click', () => {
+      cheatInput.style.display = cheatInput.style.display === 'none' ? 'inline-block' : 'none';
+      if (cheatInput.style.display !== 'none') {
+        cheatInput.focus();
+      }
+    });
+
+    cheatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const code = cheatInput.value.trim().toLowerCase();
+
+        switch (code) {
+          case 'iddqd':
+            points = 1000000;
+            alert('💰 Cheat activated: 1,000,000 points!');
+            break;
+          case 'freeplants':
+            points += 100;
+            alert('🌱 You received 100 bonus points!');
+            break;
+          case 'maxplants':
+            points = 999999;
+            alert('💹 Points set to 999,999');
+            break;
+          case 'clearplants':
+            document.querySelectorAll('.plant').forEach(p => p.remove());
+            alert('🧹 All plants removed!');
+            break;
+          case 'fastgrow':
+            growSpeed = 500;
+            alert('⚡ Plant growth speed increased!');
+            break;
+          default:
+            alert('❌ Invalid cheat code');
+        }
+
+        updatePointsDisplay();
+        cheatInput.value = '';
+        cheatInput.style.display = 'none';
+      }
+    });
+  </script>
+</body>
 </html>
