@@ -129,6 +129,35 @@ document.addEventListener('keydown', (e) => {
     cheatBuffer = ''; // reset after cheat
   }
 });
+  const cheatBtn = document.getElementById('cheatBtn');
+const cheatInput = document.getElementById('cheatInput');
+
+// Toggle cheat input visibility
+cheatBtn.addEventListener('click', () => {
+  cheatInput.style.display = cheatInput.style.display === 'none' ? 'inline-block' : 'none';
+  if (cheatInput.style.display !== 'none') {
+    cheatInput.focus();
+  }
+});
+
+// Handle cheat input
+cheatInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const code = cheatInput.value.trim().toLowerCase();
+
+    if (code === 'iddqd') {
+      points = 1000000;
+      updatePointsDisplay();
+      alert('Cheat activated! 💰 You now have 1,000,000 points.');
+    } else {
+      alert('Invalid cheat code ❌');
+    }
+
+    cheatInput.value = '';
+    cheatInput.style.display = 'none';
+  }
+});
+
 
   // ⚠️ No points added on bulk clear
   updatePointsDisplay();
