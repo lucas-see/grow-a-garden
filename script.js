@@ -111,6 +111,24 @@ clearBtn.addEventListener('click', () => {
       plant.remove();
     }, 300);
   });
+// 🕹️ Cheat code: Type "iddqd" to get 1 million points
+let cheatBuffer = '';
+
+document.addEventListener('keydown', (e) => {
+  cheatBuffer += e.key.toLowerCase();
+
+  // Keep only the last 10 characters
+  if (cheatBuffer.length > 10) {
+    cheatBuffer = cheatBuffer.slice(-10);
+  }
+
+  if (cheatBuffer.includes('iddqd')) {
+    points = 1000000;
+    updatePointsDisplay();
+    alert('Cheat activated! 💰 You now have 1,000,000 points.');
+    cheatBuffer = ''; // reset after cheat
+  }
+});
 
   // ⚠️ No points added on bulk clear
   updatePointsDisplay();
